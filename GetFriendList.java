@@ -1,76 +1,29 @@
 package Selenium;
-import java.io.File;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.SystemUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
+import BizIQ.ChromeDriverSetup;
 
 /**
  * Selenium」
- */
+*/
 public class GetFriendList {
-    private WebDriver driver;
-    
-    /**
-     * 現在の環境に応じたchromedriverのインストールパスを取得する。
-     */
-    private String chromeDriverPath() {
-        String path;
-        if (SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX) {
-            path = "chromedriver/mac/chromedriver"; // Mac環境の場合
-        } else {
-            path = "chromedriver/win/chromedriver.exe"; // Windows環境の場合
-        }
-        File file = new File(path);
-        return file.getAbsolutePath();
-    }
-    
-    /**
-     * 初期処理。
-     * 「@Before」をつけたメソッドは、各テストメソッドの開始前に毎回実行される。
-     */
-    @Before
-    public void SsetUp() {
-        // chromedriverのインストール場所を指定
-        System.setProperty("webdriver.chrome.driver", chromeDriverPath());
-        
-        // WebDriverのインスタンスを生成しブラウザを起動
-        driver = new ChromeDriver();
-        // ウィンドウサイズを指定
-        int width = 1200;
-        int height =1000;
-        driver.manage().window().setSize(new Dimension(width,height));
-    }
-    
-    /**
-     * 終了処理。
-     * 「@After」をつけたメソッドは、各テストメソッドの終了後に毎回実行される。    
-     */
-    @After
-    public void tearDown() {
-        // ブラウザを閉じ、WebDriverを終了する
-        driver.quit();
-    }
-    
     /**
      * メインスト処理。
      * JUnitは、「@Test」がついたメソッドをテストメソッドとして実行する。
      */
     @Test
     public void test() {
+    	ChromeDriverSetup cds = new ChromeDriverSetup();
+		WebDriver driver = cds.setUp();
+        
         // URLを設定
         String url = "https://facebook.com/";
         String BaseURL ="https://www.facebook.com/friends.php?id=";
@@ -147,7 +100,9 @@ public class GetFriendList {
             } // while
      	   	System.out.println("Miya-3-1");
             // driver.switchTo().alert().accept();
-            Thread.sleep(5000); // デモ用       
+            Thread.sleep(5000); 
+            // close Chrome
+            cds.tearDown(driver);
         } catch (InterruptedException e) {
         	throw new RuntimeException(e);
         } // try()
